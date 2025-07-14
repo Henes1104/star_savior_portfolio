@@ -1,12 +1,11 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import YouTube from 'react-youtube';
 import { motion, LayoutGroup } from 'framer-motion';
 import { mainPVs, characterPVs } from '../data/pvData';
-import { useFullpage } from '../context/FullpageContext';
 
-const TabButton = ({ text, selected, onClick, layoutId }) => (
+const TabButton = ({ text, selected, onClick, layoutId }: { text: string; selected: boolean; onClick: () => void; layoutId: string }) => (
   <motion.button
     onClick={onClick}
     className="relative px-4 py-2 text-lg font-semibold text-white transition-colors duration-300 focus:outline-none"
@@ -27,12 +26,11 @@ const TabButton = ({ text, selected, onClick, layoutId }) => (
 );
 
 export default function PVPage() {
-  const { activeSection } = useFullpage();
   const [selectedMainPV, setSelectedMainPV] = useState(mainPVs[0]);
   const [selectedCharacter, setSelectedCharacter] = useState(characterPVs[0]);
   const [isPinned, setIsPinned] = useState(true); // Default to pinned
 
-  const handleCharacterClick = (char) => {
+  const handleCharacterClick = (char: { name: string; id: string }) => {
     if (isPinned && selectedCharacter?.name === char.name) {
       // Clicking the selected one does nothing, or you can unpin
       // setIsPinned(false);
@@ -43,7 +41,7 @@ export default function PVPage() {
     }
   };
 
-  const handleMainPVClick = (pv) => {
+  const handleMainPVClick = (pv: { name: string; id: string }) => {
     setSelectedMainPV(pv);
   };
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import YouTube, { YouTubeProps } from 'react-youtube';
+import YouTube, { YouTubeProps, YouTubePlayer } from 'react-youtube';
 import { useFullpage } from '@/context/FullpageContext'; // useFullpage import
 
 interface MainPageHandles {
@@ -9,8 +9,8 @@ interface MainPageHandles {
   pauseVideo: () => void;
 }
 
-const MainPage = forwardRef<MainPageHandles, {}>((props, ref) => {
-  const playerRef = useRef<any>(null);
+const MainPage = forwardRef<MainPageHandles, Record<string, unknown>>((props, ref) => {
+  const playerRef = useRef<YouTubePlayer>(null);
   const { isMuted } = useFullpage(); // isMuted 상태 가져오기
 
   // YouTube Player Options
@@ -81,5 +81,7 @@ const MainPage = forwardRef<MainPageHandles, {}>((props, ref) => {
     </div>
   );
 });
+
+MainPage.displayName = 'MainPage';
 
 export default MainPage;

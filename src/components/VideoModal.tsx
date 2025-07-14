@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useEffect } from 'react';
-import YouTube from 'react-youtube';
+import YouTube, { YouTubePlayer } from 'react-youtube';
 
 import { useFullpage } from '../context/FullpageContext';
 
@@ -12,7 +12,7 @@ interface VideoModalProps {
 }
 
 export default function VideoModal({ videoId, isOpen, onClose }: VideoModalProps) {
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<YouTubePlayer>(null);
   const { fullpageApi } = useFullpage();
 
   useEffect(() => {

@@ -6,18 +6,31 @@ import CharacterPage from '@/components/CharacterPage';
 import PVPage from '@/components/PVPage';
 import NewsPage from '@/components/NewsPage';
 import Header from '@/components/Header';
-import { FullpageProvider, useFullpage } from '@/context/FullpageContext';
+import { FullpageProvider, useFullpage, FullpageApiInstance } from '@/context/FullpageContext';
 
-let ReactFullpage: any; // 전역 변수로 선언
+interface MainPageHandles {
+  playVideo: () => void;
+  pauseVideo: () => void;
+}
 
-function FullpageContent({ isFullpageReady }) {
+interface FullpageSection {
+  anchor: string;
+  index: number;
+  item: HTMLElement;
+  isFirst: boolean;
+  isLast: boolean;
+}
+
+let ReactFullpage: React.ComponentType<any>; // eslint-disable-line @typescript-eslint/no-explicit-any
+
+function FullpageContent({ isFullpageReady }: { isFullpageReady: boolean }) {
   const { setActiveSection, setFullpageApi } = useFullpage();
-  const mainPageRef = useRef<any>(null); // MainPage에 대한 ref
+  const mainPageRef = useRef<MainPageHandles>(null);
 
   const navigationTooltips = ['메인', '캐릭터', 'PV', '소식'];
 
   if (!isFullpageReady) {
-    return null; // Fullpage가 준비되지 않았으면 아무것도 렌더링하지 않음
+    return null;
   }
 
   return (
@@ -30,14 +43,14 @@ function FullpageContent({ isFullpageReady }) {
       showActiveTooltip={true}
       sectionsColor={['#0a0a0a', '#0a0a0a', '#0a0a0a', '#0a0a0a']}
       credits={{ enabled: true, position: 'bottom-left' }}
-      afterLoad={(origin, destination, direction, fullpageApi) => {
+      afterLoad={(origin: FullpageSection, destination: FullpageSection, fullpageApi: FullpageApiInstance) => {
         console.log("After load - destination.anchor:", destination.anchor);
         if (destination.anchor === '메인' && mainPageRef.current) {
           mainPageRef.current.playVideo();
         }
-        setFullpageApi(fullpageApi); // fullpageApi를 컨텍스트에 설정
+        setFullpageApi(fullpageApi);
       }}
-      onLeave={(origin, destination, direction) => {
+      onLeave={(origin: FullpageSection, destination: FullpageSection) => {
         setActiveSection(destination.anchor);
         console.log("On leave - destination.anchor:", destination.anchor);
         if (origin.anchor === '메인' && mainPageRef.current) {
@@ -46,12 +59,12 @@ function FullpageContent({ isFullpageReady }) {
       }}
       licenseKey={'YOUR_LICENSE_KEY'} // Replace with your actual license key
       fixedElements={'#disclaimer-overlay'} // 여기에 오버레이 ID 추가
-      render={({ state }) => {
+      render={({ state }: { state: { activeSection: string } }) => {
         console.log('fullPage.js state object:', state);
         console.log('fullPage.js activeSection:', state.activeSection);
 
         return (
-          <ReactFullpage.Wrapper>
+          <>
             <div className="section" data-anchor="메인">
               <MainPage ref={mainPageRef} />
             </div>
@@ -64,7 +77,7 @@ function FullpageContent({ isFullpageReady }) {
             <div className="section" data-anchor="소식">
               <NewsPage />
             </div>
-          </ReactFullpage.Wrapper>
+          </>
         );
       }}
     />

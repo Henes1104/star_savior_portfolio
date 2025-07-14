@@ -2,20 +2,26 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+export interface FullpageApiInstance {
+  setAllowScrolling: (value: boolean) => void;
+  setKeyboardScrolling: (value: boolean) => void;
+  // 필요한 다른 fullpage.js API 메서드를 여기에 추가
+}
+
 interface FullpageContextType {
   activeSection: string;
   setActiveSection: (section: string) => void;
-  fullpageApi: any;
-  setFullpageApi: (api: any) => void;
-  isMuted: boolean; // isMuted 상태 추가
-  toggleMute: () => void; // toggleMute 함수 추가
+  fullpageApi: FullpageApiInstance | null;
+  setFullpageApi: (api: FullpageApiInstance | null) => void;
+  isMuted: boolean;
+  toggleMute: () => void;
 }
 
 const FullpageContext = createContext<FullpageContextType | undefined>(undefined);
 
 export const FullpageProvider = ({ children }: { children: ReactNode }) => {
   const [activeSection, setActiveSection] = useState<string>('메인');
-  const [fullpageApi, setFullpageApi] = useState<any>(null);
+  const [fullpageApi, setFullpageApi] = useState<FullpageApiInstance | null>(null);
   const [isMuted, setIsMuted] = useState<boolean>(true); // 초기값을 true로 변경 (음소거 상태로 시작)
 
   const toggleMute = () => {

@@ -4,13 +4,13 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { newsData } from '../data/newsData';
 
-const renderContentWithLinks = (text) => {
+const renderContentWithLinks = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text.split(urlRegex).map((part, index) => {
+  return text.split(urlRegex).map((part, i) => {
     if (part.match(urlRegex)) {
       return (
         <a 
-          key={index} 
+          key={i} 
           href={part} 
           target="_blank" 
           rel="noopener noreferrer" 
@@ -20,7 +20,7 @@ const renderContentWithLinks = (text) => {
         </a>
       );
     }
-    return part;
+    return <React.Fragment key={i}>{part}</React.Fragment>;
   });
 };
 
@@ -29,7 +29,7 @@ export default function NewsPage() {
     <div className="flex flex-col items-center justify-center h-screen w-full bg-gray-900 text-white pt-20 p-8">
       <h2 className="text-4xl font-bold mb-10 pt-10">소식</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
-        {newsData.map((news, index) => (
+        {newsData.map((news, _index) => ( // eslint-disable-line @typescript-eslint/no-unused-vars
           <motion.div
             key={news.id}
             className="bg-gray-800 rounded-lg shadow-lg p-6 flex flex-col justify-between"
